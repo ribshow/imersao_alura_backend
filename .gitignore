@@ -1,0 +1,4 @@
+node_modules
+
+# ignorando chave-api.txt
+chave-api.txt
