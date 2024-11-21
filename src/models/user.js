@@ -3,8 +3,10 @@ import connectDb from "../config/dbconfig.js";
 // instanciando a conexão com o cluster na nuvem
 const connection = await connectDb(process.env.STRING_CONNECTION);
 
+// função para inserir múltiplos documentos na coleção user
 const createCollection = async () => {
   try {
+    // crio um array de com os objetos que serão inseridos
     const users = [
       {
         username: "Billy",
@@ -33,6 +35,7 @@ const createCollection = async () => {
     console.log(
       `${insertManyResult.insertedCount} documentos foram inseridos.`
     );
+
     for (let id of Object.values(ids)) {
       console.log(`Documento inserido com id ${id}`);
     }
