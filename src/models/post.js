@@ -1,4 +1,5 @@
 import connectDb from "../config/dbconfig.js";
+import "dotenv/config";
 import { ObjectId } from "mongodb";
 
 // instanciando a conexão com o cluster na nuvem
@@ -23,9 +24,15 @@ export async function create(newPost) {
   return collection.insertOne(newPost);
 }
 
-// função para atualziar um post
+// função para atualziar um post( exercicio luri)
 export async function update(id, updatePost) {
   // normalizo o id recebido como parâmetro para passar para a função update
   const objectId = ObjectId.createFromHexString(id);
   return collection.updateOne({ _id: objectId }, { $set: updatePost });
+}
+
+// função para atualizar um post
+export async function updateNew(id, newPost) {
+  const objectId = ObjectId.createFromHexString(id);
+  return collection.updateOne({ _id: objectId }, { $set: newPost });
 }

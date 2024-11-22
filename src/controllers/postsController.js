@@ -1,5 +1,12 @@
 import { ObjectId } from "mongodb";
-import { getAllPosts, create, update, findPost } from "../models/post.js";
+import {
+  getAllPosts,
+  create,
+  update,
+  findPost,
+  updateNew,
+} from "../models/post.js";
+import generateDescWithGemini from "../services/geminiService.js";
 import fs from "fs";
 
 // listar todos os posts
@@ -32,12 +39,13 @@ export async function createPost(req, res) {
   }
 }
 
-// upload de imagens
-export async function uploadImage(req, res) {
+// cria um post com imagem
+export async function createPostImage(req, res) {
+  const { description, alt } = req.body;
   const newPost = {
-    description: "",
+    description,
     image_url: req.file.originalname, // recebendo caminho da imagem
-    alt: "",
+    alt,
   };
 
   try {
@@ -70,5 +78,27 @@ export async function updatePost(req, res) {
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Erro ao atualziar post" });
+  }
+}
+
+// atualiza um post gerando uma descrição usando api do gemini
+export async function updateNewPost(req, res) {
+  const { id } = req.params;
+  const imageUrl = `http://localhost:3000/${id}.jpg`;
+  try {
+    const imageBuffer = fs.readFileSync(`uploads/${id}.jpg`);
+    const description = await generateDescWithGemini(imageBuffer);
+
+    const newPost = {
+      description: description,
+      image_url: imageUrl,
+      alt: req.body.alt,
+    };
+
+    const postUpdate = await updateNew(id, newPost);
+    res.status(200).json(postUpdate);
+  } catch (error) {
+    console.error(error);
+    res.status(400).json({ error: `Erro ao atualizar post ${error.message}` });
   }
 }
