@@ -36,3 +36,9 @@ export async function updateNew(id, newPost) {
   const objectId = ObjectId.createFromHexString(id);
   return collection.updateOne({ _id: objectId }, { $set: newPost });
 }
+
+// função para excluir um post
+export async function deleteOnePost(id) {
+  const objectId = ObjectId.createFromHexString(id);
+  return collection.deleteOne({ _id: objectId });
+}

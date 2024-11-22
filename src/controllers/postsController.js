@@ -5,6 +5,7 @@ import {
   update,
   findPost,
   updateNew,
+  deleteOnePost,
 } from "../models/post.js";
 import generateDescWithGemini from "../services/geminiService.js";
 import fs from "fs";
@@ -88,7 +89,7 @@ export async function updateNewPost(req, res) {
   try {
     const imageBuffer = fs.readFileSync(`uploads/${id}.jpg`);
     const description = await generateDescWithGemini(imageBuffer);
-
+    //console.log(alt);
     const newPost = {
       description: description,
       image_url: imageUrl,
@@ -100,5 +101,20 @@ export async function updateNewPost(req, res) {
   } catch (error) {
     console.error(error);
     res.status(400).json({ error: `Erro ao atualizar post ${error.message}` });
+  }
+}
+
+// deleta um post
+export async function deletePost(req, res) {
+  const { id } = req.params;
+
+  try {
+    const postDeleted = await deleteOnePost(id);
+    res.status(200).json(postDeleted);
+  } catch (error) {
+    console.error(error);
+    res
+      .status(500)
+      .json({ error: `Houve um problema ao excluir o post ${error.message}` });
   }
 }

@@ -7,6 +7,7 @@ import {
   showPost,
   updateNewPost,
   createPostImage,
+  deletePost,
 } from "../controllers/postsController.js";
 import multer from "multer";
 
@@ -51,6 +52,9 @@ const routes = (app) => {
 
   // rota para atualizar uma imagem (exercicio luri)
   app.put("/posts/:id", updatePost);
+
+  // excluir um post
+  app.delete("/posts/:id", deletePost);
 };
 
 export default routes;
